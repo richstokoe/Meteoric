@@ -1,0 +1,27 @@
+body{
+font-family:Arial,Tahoma,sans-serif
+}
+
+/* WRITERS */
+.meteoric-form{
+border:1px solid #CCC;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+margin:1em;
+}
+.meteoric-fieldLabel{
+margin: 0.2em;
+color:#336699;
+}
+.meteoric-fieldDisplay input{
+margin-left:1em;
+}
+pre.code{
+background-color:#EEE;
+border:1px solid #DDD;
+padding:0.2em;
+}
+span.comment{
+color:#4C4;
+}
