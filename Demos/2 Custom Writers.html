@@ -79,9 +79,8 @@ $.meteoric.writers.youtube = function (context, entity) {
 						frameborder=&quot;0&quot; allowfullscreen&gt;&#39;);;
 	} else {
 		<span class="comment">// Delegate all other types of writing to the standard "string" writer
-		// We need to override the type in order to delegate it:</span>
-		entity.type = "string";
-		$.meteoric.writers.string(context, entity);
+		// The third parameter is the name of the writer to use instead:</span>
+		context.build(context, entity, "string");
 	}
 	context.parent.append(fieldDisplay);
 };
@@ -144,12 +143,8 @@ $("#meteoricDelete").meteoric({ metadata: entity, mode: "delete" });</pre></p>
 						+ entity.value.split("watch?v=").join("embed/") + '" frameborder="0" allowfullscreen></iframe>');
 				} else {
 					// Delegate all other types of writing to the standard "string" writer
-					// We need to override the type in order to delegate it:
-					entity.type = "string";
-					$.meteoric.writers.string(context, entity);
-
-					// Reset type in case the metadata entity is reused
-					entity.type = "youtube";
+					// The third parameter is the name of the writer to use instead:
+					context.build(context, entity, "string");
 				}
 				context.parent.append(fieldDisplay);
 			};

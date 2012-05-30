@@ -158,15 +158,15 @@
 			// TODO: siblings: [],
 			entireMetadata: settings.metadata,
 			mode: settings.mode,
-			build: function (context, entity) {
-				var e, writer;
+			build: function (context, entity, typeOverride) {
+				var e, writer, writerType;
 
-				// We'll be appending to the entity div lots, so store the div in a short variable
-				e = context.root;
+				// Supports overriding the writer to be used
+				writerType = typeOverride || entity.type;
 
-				if (entity.type) {
+				if (writerType) {
 					// Find a writer for this type of metadata
-					writer = $.meteoric.writers[entity.type];
+					writer = $.meteoric.writers[writerType];
 
 					if (writer) {
 						writer(context, entity);
