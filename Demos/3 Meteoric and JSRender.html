@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>3 Meteoric and JSRender - Meteoric Demos</title>
+        	<script src="http://code.jquery.com/jquery-1.7.2.min.js" type="text/javascript"></script>
+		<script src="../meteoric.js" type="text/javascript"></script>
+		<script src="jsrender.js" type="text/javascript"></script>
+		<link type="text/css" rel="Stylesheet" href="styles.css" />
+	</head>
+	<body>
+	<h1>3 Meteoric and JSRender</h1>
+	<p>In response to a request, not everyone wants to use JavaScript to build their HTML! 
+		Here is an example of using <a href="http://www.borismoore.com" target="_blank">Boris 
+		Moore</a>'s excellent <a href="https://github.com/BorisMoore/jsrender" target="_blank">JSRender</a>
+		templating framework. 	In reality, you can use any templating framework you want...</p>
+
+        <p><pre class="code">
+&lt;div id="templatedView"/&gt;
+
+<span class="comment">// Build a JSRender template for a "Customer"</span>
+&lt;script id="customerTemplate" type="text/x-jsrender"&gt;
+	&lt;h2&gt;{{:name}} ({{:id}})&lt;/h2&gt;
+	&lt;p&gt;&lt;b&gt;Credit Limit:&lt;/b&gt; {{:creditLimit}}&lt;br /&gt;
+	&lt;b&gt;Balance: 
+		{{if balance > creditLimit }}
+			&lt;span style="color:#FF0000"&gt;{{:balance}}&lt;/span&gt;
+		{{else}}
+			{{:balance}}
+		{{/if}}&lt;br /&gt;
+	&lt;b&gt;Credit Days:&lt;/b&gt; {{:creditDays}}
+	&lt;/p&gt;
+&lt;/script&gt;
+
+&lt;script type="text/javascript"&gt;
+	<span class="comment">// Build the entity</span>
+	var entity = {
+		<span class="comment">// Customer 'type'</span>
+		"type": "customer",
+		"id": 1234,
+		"name": "John Smith, Inc.",
+		"creditLimit": 5000.00,
+		"balance": 5850.50,				<span class="comment">// Overdrawn!</span>
+		"creditDays": 28
+	};
+
+	<span class="comment">// Create a writer for the 'customer' type:</span>
+	$.meteoric.writers.customer = function (context, entity) {
+		var fieldDisplay;
+	
+		fieldDisplay = $("#customerTemplate").render(entity);
+	
+		context.parent.append(fieldDisplay);
+	};
+
+	$("#templatedView").meteoric({ entity: entity });
+&lt;/script&gt;
+</pre></p>
+
+        <h2>Output:</h2>
+
+<div id="templatedView" />
+
+<script id="customerTemplate" type="text/x-jsrender">
+	<h2>{{:name}} ({{:id}})</h2>
+	<p><b>Credit Limit:</b> {{:creditLimit}}<br />
+	<b>Balance: 
+		{{if balance > creditLimit }}
+			<span style="color:#FF0000">{{:balance}}</span>
+		{{else}}
+			{{:balance}}
+		{{/if}}<br />
+	<b>Credit Days:</b> {{:creditDays}}
+	</p>
+</script>
+
+<script type="text/javascript">
+	// Build the entity
+	var entity = {
+		// Customer 'type'
+		"type": "customer",
+		"id": 1234,
+		"name": "John Smith, Inc.",
+		"creditLimit": 5000.00,
+		"balance": 5850.50,				// Overdrawn!
+		"creditDays": 28
+	};
+
+	// Create a writer for the 'customer' type:
+	$.meteoric.writers.customer = function (context, entity) {
+		var fieldDisplay;
+	
+		fieldDisplay = $("#customerTemplate").render(entity);
+	
+		context.parent.append(fieldDisplay);
+	};
+
+	$("#templatedView").meteoric({ entity: entity });
+</script>
+
+	</body>
+</html>
