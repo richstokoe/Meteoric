@@ -97,7 +97,7 @@
 
 		fieldDisplay = $("<div/>").addClass("meteoric-fieldLabel").text(entity.displayName);
 
-		if (context.mode == "read") {
+		if (context.mode == "read" || context.mode == "delete") {
 			fieldDisplay.append(" " + entity.value);
 		} else {
 			inputElement = $("<input type=\"text\" />");
@@ -136,19 +136,18 @@
 	};
 
 	// extend jQuery to add the jQuery.meteoric method
-	// This is invoked like: $("#meteoricDiv").meteoric({ metadata: myEntity});
+	// This is invoked like: $("#meteoricDiv").meteoric({ entity: myEntity});
 	$.fn.meteoric = function (options) {
 
 		var settings, context;
 
 		// Default settings, overridden by options arg
 		settings = $.extend({
-			metadata: null,
-			mode: "create"			// CRUD
-			/*,debugMode: false     // Unused */
+			entity: null,
+			mode: "read"			// CRUD mode. "read" (i.e. display the object) is default mode
 		}, options);
 
-		if (!settings.metadata) { throw "Meteoric.js: option 'metadata' MUST be set."; }
+		if (!settings.entity) { throw "Meteoric.js: option 'entity' MUST be set."; }
 
 		// This is the object which performs contextual writes to the DOM.
 		// The function "build" does all the important work and supports nested entities.
@@ -156,7 +155,7 @@
 			root: this,
 			parent: this,
 			// TODO: siblings: [],
-			entireMetadata: settings.metadata,
+			rootEntity: settings.entity,
 			mode: settings.mode,
 			build: function (context, entity, typeOverride) {
 				var e, writer, writerType;
@@ -179,6 +178,6 @@
 			}
 		}
 
-		context.build(context, settings.metadata);
+		context.build(context, settings.entity);
 	}
 })(jQuery);

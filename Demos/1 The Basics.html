@@ -12,114 +12,124 @@
 
 	<h1>1 The Basics</h1>
 
-<p><pre class="code"><span class="comment">// Build an object</span>
-var entity = {
-	<span class="comment">// Every entity must have a "type" property</span>
-	"type": "businessObject",
-	"name": "Logon",
-	"action": "Logon",
-	<span class="comment">// Create, Update, Delete suppport, named actions (JavaScript functions)</span>
-	"onCreate": "onCreate",
-	"onUpdate": "onUpdate",
-	"onDelete": "onDelete",
-	<span class="comment">// Each entity has an array of arbitrary field entities. This is the equivalent of properties on an object.</span>
-	"fields": [{
-		"name": "Username",
-		<span class="comment">// Each field entity also needs a type property. A field can contain its own "fields" array for nested objects.</span>
-		"type": "string",
-		"displayName": "Email/Username",
-		"defaultValue": "Guest",
-		"maxLength": 32,
-		"minLength": 2,
-		"isRequired": true,
-		<span class="comment">// Entities can contain completely arbitrary properties which will be understood and interpreted later by a "Writer"</span>
-		"placeholder": "Enter your username or email address:"
-	},
-	{
-		"name": "Password",
-		"type": "password",
-		"displayName": "Password",
-		"minLength": 8,
-		"isRequired": true
+	<p>&nbsp;</p>
+	<h2>Hello, World!</h2>
+	<p>Meteoric comes with a set of default "writers" (JavaScript functions which understand how to output HTML to the DOM) for common primitive types such as "string", "integer", "decimal", "url".</p>
+
+<pre class="code"><span class="comment">// Build a simple object</span>
+var hello = {
+    "type": "string",
+    "value": "Hello, World"
+}
+
+<span class="comment">// Add &lt;div id="helloDiv" /&gt; before this script</span>
+$("#helloDiv").meteoric({ entity: hello });
+</pre>
+
+<div id="helloDiv" />
+
+<script type="text/javascript">
+// Build a simple object</span>
+var hello = {
+	"type": "string",
+	"value": "Hello, World"
+}
+$("#helloDiv").meteoric({ entity: hello });
+</script>
+
+<h2>Using the &quot;businessObject&quot; writer</h2>
+
+
+<p>There is a built in writer for the type "businessObject". 
+This writer looks for a "fields" property, which is an array 
+of entities and writes these out (based on the "type" property 
+of each field in the array).</p>
+
+<pre class="code"><span class="comment">// Build a simple businessObject</span>
+var simpleBusinessObject = {
+<span class="comment">    // Every entity must have a "type" property. 
+    // This is used to identify the "writer" that will be used to render this object.</span>
+    "type": "businessObject",
+    "fields": [{
+       "type": "string",               <span class="comment"> // This will use the "string" writer</span>
+        "value": "Hello, World!",
+        "displayName": "Greeting:"      <span class="comment">// The string writer also supports editing. 
+                                        // "displayName" lets you set the prompt for
+                                        // the text field when editing (see below).</span>
 	}]
 };
 
-<span class="comment">// Create actions</span>
-$.meteoric.actions.onCreate = function (event, entity) { 
-	alert("Created!"); 
-}
-$.meteoric.actions.onUpdate = function (event, entity) { 
-	alert("Updated!"); 
-}
-$.meteoric.actions.onDelete = function (event, entity) { 
-	if (confirm("Are you sure you want to delete this?")) {
-		alert("Deleted!"); 
-	} else {
-		alert("Delete ABORTED.");
-	}
-}
+$("#helloWorldShow").meteoric({ entity: simpleBusinessObject });</pre>
 
-<span class="comment">// Now we use a CSS/jQuery selector to select the DIV to build the entity inside.</span>
-$("#meteoricCreate").meteoric({ metadata: entity });
-$("#meteoricRead").meteoric({ metadata: entity, mode: "read" });
-$("#meteoricUpdate").meteoric({ metadata: entity, mode: "update" });
-$("#meteoricDelete").meteoric({ metadata: entity, mode: "delete" });
 
-        </pre></p>
+<div id="helloWorldShow" />
 
-        <h2>Output:</h2>
+<script type="text/javascript">
+var simpleBusinessObject = {
+// Every entity must have a "type" property. 
+// This is used to identify the "writer" that will be used to render this object.
+    "type": "businessObject",
+    "fields": [{
+       "type": "string",               // This will use the "string" writer</span>
+        "value": "Hello, World!",
+        "displayName": "Greeting:"      // The string writer also supports editing. 
+                                        // "displayName" lets you set the prompt for
+                                        // the text field when editing (see below).
+	}]
+};
 
-		<div id="meteoricCreate"/>
-		<div id="meteoricRead"/>
-		<div id="meteoricUpdate"/>
-		<div id="meteoricDelete"/>
+$("#helloWorldShow").meteoric({ entity: simpleBusinessObject });
+</script>
 
-		<script type="text/javascript">
-			var entity = {
-				"type": "businessObject",
-				"name": "Logon",
-				"action": "Logon",
-				"onCreate": "onCreate",
-				"onUpdate": "onUpdate",
-				"onDelete": "onDelete",
-				"fields": [{
-					"name": "Username",
-					"type": "string",
-					"displayName": "Email/Username",
-					"value": "Guest",
-					"maxLength": 32,
-					"minLength": 2,
-					"isRequired": true,
-					"placeholder": "Enter your username or email address:"
-				},
-				{
-					"name": "Password",
-					"type": "password",
-					"displayName": "Password",
-					"minLength": 8,
-					"isRequired": true
-				}]
-			};
 
-		// Create actions
-		$.meteoric.actions.onCreate = function (event, entity) { 
-			alert("Created!"); 
-		}
-		$.meteoric.actions.onUpdate = function (event, entity) { 
-			alert("Updated!"); 
-		}
-		$.meteoric.actions.onDelete = function (event, entity) { 
-			if (confirm("Are you sure you want to delete this?")) {
-				alert("Deleted!"); 
-			} else {
-				alert("Delete ABORTED.");
-			}
-		}
+<p>
 
-		$("#meteoricCreate").meteoric({ metadata: entity });
-		$("#meteoricRead").meteoric({ metadata: entity, mode: "read" });
-		$("#meteoricUpdate").meteoric({ metadata: entity, mode: "update" });
-		$("#meteoricDelete").meteoric({ metadata: entity, mode: "delete" });
-		</script>
+
+<p>&nbsp;</p>
+
+<h2>Reusing a metadata entity for different purposes</h2>
+
+<p>Writers get given a "context" as well as the entity they are to write. The context.mode property identifies either "create", "read" (read is the default, if "mode" doesn't have a value), "update" or "delete":</p>
+<ul>
+  <li>  In "read" mode, the writer should just display the properties of the entity.</li>
+  <li> In "create" mode, the writer should display an appropriate control (for example, a text box) for each property. If the values for each property are not empty, the create screen should be pre-populated with the values of the properties.</li>
+  <li> The "update" mode should behave as the "create" does.</li>
+  <li> The "delete" mode should behave the same as "read".
+  </li>
+</ul>
+
+<pre class="code"><span class="comment">$("#helloWorldCreate").meteoric({ entity: simpleBusinessObject, mode: "create" });</pre>
+
+<div id="helloWorldCreate" />
+
+<script type="text/javascript">
+$("#helloWorldCreate").meteoric({ entity: simpleBusinessObject, mode: "create" });
+</script>
+
+<p>&nbsp;</p>
+
+<pre class="code"><span class="comment">$("#helloWorldUpdate").meteoric({ entity: simpleBusinessObject, mode: "update" });</pre>
+
+<div id="helloWorldUpdate" />
+
+<script type="text/javascript">
+$("#helloWorldUpdate").meteoric({ entity: simpleBusinessObject, mode: "update" });
+</script>
+
+<p>&nbsp;</p>
+
+
+<pre class="code"><span class="comment">$("#helloWorldDelete").meteoric({ entity: simpleBusinessObject, mode: "delete" });</pre>
+
+<div id="helloWorldDelete" />
+
+<script type="text/javascript">
+$("#helloWorldDelete").meteoric({ entity: simpleBusinessObject, mode: "delete" });
+</script>
+
+<p>&nbsp;</p>
+
+<p>The "businessObject" writer also understands the "context.mode" property, and tries to build an appropriate form around the fields it renders, as you can see from the displays above.</p>
+
 	</body>
 </html>

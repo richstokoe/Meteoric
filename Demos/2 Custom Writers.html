@@ -27,7 +27,7 @@
 	<p>Embed Code:</p>
 	<pre class="code">&lt;iframe width=&quot;420&quot; height=&quot;315&quot; src=&quot;http://www.youtube.com/<strong style="color:#F00">embed/</strong>NuIsBO9HifY&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;</pre>
 
-	<p>The metadata object is simple, just the original URL and a Type:</p>
+	<p>The metadata object is simple, just the original URL and a Type. The "businessObject" writer also allows you to set "onCreate", "onUpdate" and "onDelete" properties, which are the names of actions (functions, added to $.meteoric.actions - see below) called when the "Create", "Update" or "Delete" buttons are pressed, when the context.mode has been set to one of those three modes.</p>
 
         <p><pre class="code"><span class="comment">// Build the entity</span>
 var entity = {
@@ -41,7 +41,7 @@ var entity = {
 		"name": "FavouriteYouTubeVid",
 		<span class="comment">// new "type" - so we need to create a writer</span>
 		"type": "youtube",
-		"displayName": "Favourite YouTube Video",
+		"displayName": "Favourite YouTube Video:",
 		<span class="comment">// We can cheat and re-use the "string" writer for 
 		Create/Update scenarios. So this entity must be able to provide the 
 		information that the string writer needs to run</span>
@@ -77,6 +77,7 @@ $.meteoric.writers.youtube = function (context, entity) {
 		fieldDisplay = $(&#39;&lt;iframe width=&quot;420&quot; height=&quot;315&quot; src=&quot;&#39; + 
 						entity.value.split(&quot;watch?v=&quot;).join(&quot;embed/&quot;) + &#39;&quot; 
 						frameborder=&quot;0&quot; allowfullscreen&gt;&#39;);;
+    
 	} else {
 		<span class="comment">// Delegate all other types of writing to the standard "string" writer
 		// The third parameter is the name of the writer to use instead:</span>
@@ -86,15 +87,15 @@ $.meteoric.writers.youtube = function (context, entity) {
 };
 
 
-$("#meteoricCreate").meteoric({ metadata: entity });
-$("#meteoricRead").meteoric({ metadata: entity, mode: "read" });
-$("#meteoricUpdate").meteoric({ metadata: entity, mode: "update" });
-$("#meteoricDelete").meteoric({ metadata: entity, mode: "delete" });</pre></p>
+$("#meteoricRead").meteoric({ entity: entity });
+$("#meteoricCreate").meteoric({ entity: entity, mode: "create" });
+$("#meteoricUpdate").meteoric({ entity: entity, mode: "update" });
+$("#meteoricDelete").meteoric({ entity: entity, mode: "delete" });</pre></p>
 
         <h2>Output:</h2>
 
-		<div id="meteoricCreate"/>
 		<div id="meteoricRead"/>
+		<div id="meteoricCreate"/>
 		<div id="meteoricUpdate"/>
 		<div id="meteoricDelete"/>
 
@@ -109,7 +110,7 @@ $("#meteoricDelete").meteoric({ metadata: entity, mode: "delete" });</pre></p>
 				"fields": [{
 					"name": "FavouriteYouTubeVid",
 					"type": "youtube",
-					"displayName": "Favourite YouTube Video",
+					"displayName": "Favourite YouTube Video:",
 					"value": "http://www.youtube.com/watch?v=NuIsBO9HifY",
 					"maxLength": 90,
 					"minLength": 2,
@@ -150,10 +151,10 @@ $("#meteoricDelete").meteoric({ metadata: entity, mode: "delete" });</pre></p>
 			};
 
 
-			$("#meteoricCreate").meteoric({ metadata: entity });
-			$("#meteoricRead").meteoric({ metadata: entity, mode: "read" });
-			$("#meteoricUpdate").meteoric({ metadata: entity, mode: "update" });
-			$("#meteoricDelete").meteoric({ metadata: entity, mode: "delete" });
+			$("#meteoricRead").meteoric({ entity: entity });
+			$("#meteoricCreate").meteoric({ entity: entity, mode: "create" });
+			$("#meteoricUpdate").meteoric({ entity: entity, mode: "update" });
+			$("#meteoricDelete").meteoric({ entity: entity, mode: "delete" });
 		</script>
 	</body>
 </html>
